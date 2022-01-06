@@ -130,9 +130,10 @@ router.post('/sale', passport.authenticate('jwt', { session: false }), (req, res
 });
 
 router.post('/item', passport.authenticate('jwt', { session: false }), (req, res) => {
-    User.findOne({ sale: req.body.sale })
+    User.findOne({ id: req.user.id})
         .then(user => {
-            req.user.sale[0].item.push(
+            console.log('THIS IS THE USER', user)
+            user.sale[0].item.push(
                 {
                     itemName: req.body.itemName,
                     price: req.body.price,
@@ -141,6 +142,9 @@ router.post('/item', passport.authenticate('jwt', { session: false }), (req, res
                     itemImage: req.body.itemImage,
                 }
             )
+            user.save(function (err) {
+                if (!err) console.log('Success!');
+            });
         });
 
 })
